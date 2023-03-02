@@ -1,3 +1,5 @@
+import { BoardSize } from "./Board";
+
 // DEBUG
 const DEBUG = false;
 function DEBUG_LOG(param){
@@ -7,8 +9,6 @@ function DEBUG_LOG(param){
 
 // An array with the lengths of each ship that'll be created
 const ShipLenghts = [2, 3, 3, 4, 5];
-// BoardSize
-const BoardSize = 10;
 
 class ShipPosition {
     constructor(length, coordinate, is_horizontal){
