@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { View } from "react-native";
+import ShipsInfo from "./ShipInfo";
 
 const waterColor = '#48F';
 const shipColor = 'darkgray';
@@ -8,7 +10,7 @@ export const BoardSize = 10;
 
 
 // Component that show a single cell of the board
-function CellView({hasShip = false, cellSize = 15}){
+function CellView({ hasShip = false, cellSize = 15 }) {
     return (
         <View style={{
             padding: cellSize,
@@ -22,7 +24,7 @@ function CellView({hasShip = false, cellSize = 15}){
 }
 
 // Create matrix a booleans
-function CreateEmptyBoard(){
+function CreateEmptyBoard() {
     let board = [];
     // Populate each row
     for (let i = 0; i < BoardSize; i++) {
@@ -37,7 +39,37 @@ function CreateEmptyBoard(){
     return board;
 }
 
-export function BoardView(){
+export function BoardView() {
+
+    // State that holds the values of an array of objects from the ShipInfo class
+    const [shipsInfo, setShipsInfo] = useState({});
+
+    // State that controls the Board Component
+    const [board, setBoard] = useState(CreateEmptyBoard());
+
+    // Fcuntion that will create a playable board
+    function genBoard() {
+        // An empty board must be created
+        let temporaryBoard = CreateEmptyBoard();
+
+        // Create the array of shipinfo and set the state
+        setShipsInfo(ShipsInfo());
+
+        // Paint for each ship
+        for (let iShip = 0; iShip < shipsInfo.length; iShip++) {
+            // Paint regarding the length of the ship
+            for (let j = 0; j < shipsInfo[iShip].length; j++) {
+                if (shipsInfo[iShip].Horizontal)
+                    temporaryBoard[shipsInfo[iShip].coordinate[1]][shipsInfo[iShip].coordinate[0] + j] = true;
+                else
+                    temporaryBoard[shipsInfo[iShip].coordinate[1] + j][shipsInfo[iShip].coordinate[0]] = true;
+            }
+        }
+
+        // Assign the temporary board to the state's board
+        setBoard(temporaryBoard);
+    }
+
+
     
-    // missing whole board component
 }
