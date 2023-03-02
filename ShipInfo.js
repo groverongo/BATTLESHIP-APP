@@ -66,7 +66,7 @@ function RandBool(){
     return Math.random() < 0.5;
 }
 
-function ShipsInfo(){
+export default function ShipsInfo(){
     // Create result array with ship information on board
     const infoArray = new Array();
     /* 
