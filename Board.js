@@ -70,6 +70,33 @@ export function BoardView() {
         setBoard(temporaryBoard);
     }
 
+    return (
+        <View style={{ padding: 30 }}>
 
-    
+            {/* View the ui of a board */}
+            <View style={{ alignItems: "center", marginBottom: 10 }}>
+                {board.map(row => {
+                    return (
+                        <View style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap'
+                        }}>
+                            {row.map(cell => <Casilla barco={cell} />)}
+                        </View>
+                    )
+                })}
+            </View>
+
+            {/* Buttons for creating and saving board */}
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+            }}>
+                <Button title='Create Board' onPress={genBoard} />
+                <Button title='Save Board' onPress={saveBoard} />
+
+            </View>
+
+        </View>
+    );
 }
