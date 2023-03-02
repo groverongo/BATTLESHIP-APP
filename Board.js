@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { View ,Button } from "react-native";
 import ShipsInfo from "./ShipInfo";
+import { BoardSize, DEBUG_LOG } from "./Constant.js";
 
 const waterColor = '#48F';
 const shipColor = 'darkgray';
-
-// Size of the square board
-export const BoardSize = 10;
 
 
 // Component that show a single cell of the board
@@ -34,7 +32,7 @@ function CreateEmptyBoard() {
             row.push(false);
         }
         // Add row to result matrix
-        board.push(fila);
+        board.push(row);
     }
     return board;
 }
@@ -51,7 +49,7 @@ export function BoardView() {
     function genBoard() {
         // An empty board must be created
         let temporaryBoard = CreateEmptyBoard();
-
+        
         // Create the array of shipinfo and set the state
         setShipsInfo(ShipsInfo());
 
@@ -59,7 +57,7 @@ export function BoardView() {
         for (let iShip = 0; iShip < shipsInfo.length; iShip++) {
             // Paint regarding the length of the ship
             for (let j = 0; j < shipsInfo[iShip].length; j++) {
-                if (shipsInfo[iShip].Horizontal)
+                if (shipsInfo[iShip].is_horizontal)
                     temporaryBoard[shipsInfo[iShip].coordinate[1]][shipsInfo[iShip].coordinate[0] + j] = true;
                 else
                     temporaryBoard[shipsInfo[iShip].coordinate[1] + j][shipsInfo[iShip].coordinate[0]] = true;
@@ -68,6 +66,10 @@ export function BoardView() {
 
         // Assign the temporary board to the state's board
         setBoard(temporaryBoard);
+    }
+
+    function saveBoard(){
+
     }
 
     return (
@@ -81,7 +83,7 @@ export function BoardView() {
                             flexDirection: 'row',
                             flexWrap: 'wrap'
                         }}>
-                            {row.map(cell => <Casilla barco={cell} />)}
+                            {row.map(cell => <CellView hasShip={cell} />)}
                         </View>
                     )
                 })}

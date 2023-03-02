@@ -1,11 +1,5 @@
-import { BoardSize } from "./Board";
-
-// DEBUG
-const DEBUG = false;
-function DEBUG_LOG(param){
-    if(DEBUG)
-        console.log(param);
-}
+import { BoardSize } from "./Constant.js";
+import {DEBUG_LOG} from './Constant.js'
 
 // An array with the lengths of each ship that'll be created
 const ShipLenghts = [2, 3, 3, 4, 5];
