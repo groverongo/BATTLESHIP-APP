@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { View ,Button } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Button, Text } from "react-native";
 import ShipsInfo from "./ShipInfo";
-import { BoardSize, DEBUG_LOG } from "./Constant.js";
+import { BoardSize, DEBUG_LOG, APIURL } from "./Constant.js";
+import * as SecureStore from 'expo-secure-store';
 
 const waterColor = '#48F';
 const shipColor = 'darkgray';
@@ -45,13 +46,20 @@ export function BoardView() {
     // State that controls the Board Component
     const [board, setBoard] = useState(CreateEmptyBoard());
 
-    // Fcuntion that will create a playable board
-    function genBoard() {
+    useEffect(() => {
+        SecureStore.getItemAsync('token').then(token => {
+            fetch(APIURL + '/api/boards', {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(resp => resp.json()).then(respSI => setShipsInfo(respSI))
+        })
+    }, []);
+
+    useEffect( () => {
         // An empty board must be created
         let temporaryBoard = CreateEmptyBoard();
-        
-        // Create the array of shipinfo and set the state
-        setShipsInfo(ShipsInfo());
 
         // Paint for each ship
         for (let iShip = 0; iShip < shipsInfo.length; iShip++) {
@@ -66,15 +74,23 @@ export function BoardView() {
 
         // Assign the temporary board to the state's board
         setBoard(temporaryBoard);
-    }
+    }, [shipsInfo])
 
-    function saveBoard(){
-
+    function saveBoard() {
+        SecureStore.getItemAsync('token').then(token => {
+            fetch(APIURL + '/api/boards', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(shipsInfo)
+            })
+        })
     }
 
     return (
         <View style={{ padding: 30 }}>
-
             {/* View the ui of a board */}
             <View style={{ alignItems: "center", marginBottom: 10 }}>
                 {board.map(row => {
@@ -94,9 +110,8 @@ export function BoardView() {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
             }}>
-                <Button title='Create Board' onPress={genBoard} />
+                <Button title='Create Board' onPress={() => setShipsInfo(ShipsInfo())} />
                 <Button title='Save Board' onPress={saveBoard} />
-
             </View>
 
         </View>
