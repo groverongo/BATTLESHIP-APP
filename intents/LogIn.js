@@ -1,40 +1,37 @@
 import { View, TextInput, Button, Text } from "react-native";
 import { useState } from "react";
 import * as SecureStore from 'expo-secure-store';
-import ShipsInfo from "./ShipInfo";
-import { APIURL } from "./Constant";
+import { APIURL } from "../Constant";
 
-export function SignUpView({ navigation }) {
+export function LogInView({ navigation }) {
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordRepeat, setPasswordRepeat] = useState('')
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     function send() {
 
-        if(username.length < 1 || password != passwordRepeat)
+        if(username.length < 1)
             return;
             
 
-        fetch(APIURL + '/api/boards', {
+        fetch(APIURL + '/api/login', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 username: username,
-                password: password,
-                shipsInfo: ShipsInfo()
+                password: password
             })
         }).then(
             r => {
-                if (r.status == 200) return r.text()
+                if (r.status == 200) return r.json()
 
                 return Promise.reject("Username already exists")
             }
         ).then(
-            token => {
-                SecureStore.setItemAsync("token", token)
+            jsonToken => {
+                SecureStore.setItemAsync("token", jsonToken.token)
                 navigation.navigate('Board')
             },
             e => setUsername(e)
@@ -45,8 +42,7 @@ export function SignUpView({ navigation }) {
         <View style={{ padding: 30 }}>
             <TextInput placeholder='Username' value={username} onChangeText={setUsername} />
             <TextInput placeholder='Password' value={password} onChangeText={setPassword} />
-            <TextInput placeholder='Repeat Password' value={passwordRepeat} onChangeText={setPasswordRepeat} />
-            <Button title='Sign Up' onPress={send} />
+            <Button title='Log In' onPress={send} />
         </View>
     );
 }

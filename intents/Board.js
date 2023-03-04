@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Button, Text } from "react-native";
-import ShipsInfo from "./ShipInfo";
-import { BoardSize, DEBUG_LOG, APIURL } from "./Constant.js";
+import ShipsInfo from "../ShipInfo.js";
+import { BoardSize, DEBUG_LOG, APIURL } from "../Constant.js";
 import * as SecureStore from 'expo-secure-store';
 
 const waterColor = '#48F';
